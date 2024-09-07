@@ -96,7 +96,7 @@ h1 {
 /* Project Detail Main Content */
 .project-detail {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 100px auto;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;

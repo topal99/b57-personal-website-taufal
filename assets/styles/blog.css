@@ -1,0 +1,133 @@
+/* Basic Styles */
+.form-section {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="date"],
+  input[type="file"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .tech-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  .submit-button {
+    text-align: center;
+  }
+  
+  .submit-button button {
+    padding: 10px 20px;
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .submit-button button:hover {
+    background-color: #C70039;
+  }
+  
+  /* Responsive Styles */
+  @media (min-width: 640px) {
+    .date-inputs {
+      display: flex;
+      gap: 20px;
+    }
+  
+    .input-group {
+      flex: 1;
+    }
+  }
+  
+  /* General button styling */
+.card-actions button {
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-right: 10px;
+}
+
+/* Edit Button Styling */
+.card-actions .edit-btn {
+  background-color: #3498db; /* Blue color */
+  color: white;
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2); /* Light blue shadow */
+}
+
+.card-actions .edit-btn:hover {
+  background-color: #2980b9; /* Darker blue */
+  transform: translateY(-3px); /* Slight lift on hover */
+  box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4); /* Stronger shadow on hover */
+}
+
+/* Delete Button Styling */
+.card-actions .delete-btn {
+  background-color: #e74c3c; /* Red color */
+  color: white;
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.2); /* Light red shadow */
+}
+
+.card-actions .delete-btn:hover {
+  background-color: #c0392b; /* Darker red */
+  transform: translateY(-3px); /* Slight lift on hover */
+  box-shadow: 0 6px 12px rgba(231, 76, 60, 0.4); /* Stronger shadow on hover */
+}
+
+/* Optional: Adding icons */
+.card-actions .edit-btn::before {
+  content: "\f044"; /* Font Awesome Edit icon */
+  font-family: "FontAwesome";
+  margin-right: 8px;
+}
+
+.card-actions .delete-btn::before {
+  content: "\f1f8"; /* Font Awesome Trash icon */
+  font-family: "FontAwesome";
+  margin-right: 8px;
+}
+
+/* Align buttons */
+.card-actions {
+  justify-content: flex-end; /* Align buttons to the right */
+  padding-top: 10px;
+}

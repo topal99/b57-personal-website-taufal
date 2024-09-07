@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Project Detail</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="assets/styles/index.css">
+  <link rel="stylesheet" href="assets/styles/blog.css">
+</head>
+<!-- navbar start -->
+<nav class="navbar">
+    <div class="container">
+      <div class="navbar-content">
+        <div class="logo-container">
+          <img class="logo" src="https://dumbways.id/assets/images/brandwhite.png" alt="Your Company">
+        </div>
+        <div class="menu">
+          <a href="index.html" class="menu-link">Home</a>
+          <a href="blog.html" class="menu-link">My Project</a>
+          <a href="contact.html" class="menu-link">Contact Form</a>
+        </div>
+        <div class="mobile-menu-button">
+          <button id="menu-toggle" class="mobile-menu-icon">
+            <span class="sr-only">Open main menu</span>
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="mobile-menu">
+        <a href="index.html" class="mobile-menu-link">Home</a>
+        <a href="blog.html" class="mobile-menu-link">My Project</a>
+        <a href="contact.html" class="mobile-menu-link">Contact Us</a>
+      </div>
+    </div>
+  </nav>
+  
+<body>    
+    <!-- Main Content -->
+ <main class="project-detail">
+    <!-- Project Title -->
+    <div class="header-container">
+      <h1 id="projectName"></h1>
+    </div>
+
+    <div class="image-and-info">
+      <!-- Project Image -->
+      <img id="projectImage" src="https://via.placeholder.com/200" alt="Project">
+
+      <div class="info-section">
+        <div class="duration-info">
+          <!-- Project Duration -->
+          <p id="projectDate"></p>
+        </div>
+
+        <!-- Technologies Used -->
+        <section class="technologies">
+          <ul id="projectTechnologies">
+            <!-- Example Technologies -->
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <!-- Project Description -->
+    <section class="description">
+      <h3>Description</h3>
+      <p id="projectDescription"></p>
+    </section>
+  </main>
+
+  <script src="assets/js/project-detail.js"></script>
+</body>
+</html>
