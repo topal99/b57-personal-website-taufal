@@ -9,7 +9,6 @@
   <title>Testimonials</title>
 </head>
 <body>
-
   <!-- navbar start -->
 <nav class="navbar">
     <div class="container">
@@ -39,6 +38,19 @@
       </div>
     </div>
   </nav>
+
+  <div class="filter-container" style="margin-top: 100px; text-align: center;">
+    <label for="rating-filter">Filter by Rating:</label>
+    <select id="rating-filter">
+      <option value="">All Ratings</option>
+      <option value="5">5 Stars</option>
+      <option value="4">4 Stars</option>
+      <option value="3">3 Stars</option>
+    </select>
+
+    <label for="profession-filter">Filter by Profession:</label>
+    <input type="text" id="profession-filter" placeholder="Enter profession">
+  </div>
 
   <div class="testimonials-container">
     <!-- Testimonial elements will be added here by JavaScript -->

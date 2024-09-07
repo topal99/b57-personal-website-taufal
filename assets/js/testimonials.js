@@ -1,15 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggleButton = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-  
-    menuToggleButton.addEventListener('click', function() {
-      if (mobileMenu.classList.contains('mobile-menu-active')) {
-        mobileMenu.classList.remove('mobile-menu-active');
-      } else {
-        mobileMenu.classList.add('mobile-menu-active');
-      }
-    });
-  });
+// assets/js/testimonials.js
 
 class Testimonial {
     constructor(name, profession, rating, message, imageUrl) {
@@ -62,21 +51,21 @@ class Testimonial {
   // Dummy data
   const testimonialsData = [
     {
-      "name": "Muh Topal",
+      "name": "John Doe",
       "profession": "Software Engineer",
       "rating": 4.5,
       "message": "Great service! The team was professional, and the project was delivered on time. I’m really happy with the results.",
       "imageUrl": "https://randomuser.me/api/portraits/men/1.jpg"
     },
     {
-      "name": "Muh Riski",
+      "name": "Jane Smith",
       "profession": "Product Manager",
       "rating": 5,
       "message": "I was impressed with the level of expertise and attention to detail. The communication was excellent throughout the project.",
       "imageUrl": "https://randomuser.me/api/portraits/women/2.jpg"
     },
     {
-      "name": "Muh Micael",
+      "name": "Michael Brown",
       "profession": "UX Designer",
       "rating": 3.5,
       "message": "Good experience overall, though there were some delays. The final product met my expectations, and I would work with them again.",
@@ -87,12 +76,39 @@ class Testimonial {
   // Function to render testimonials
   function renderTestimonials(data) {
     const container = document.querySelector('.testimonials-container');
+    container.innerHTML = ''; // Clear existing testimonials
     data.forEach(item => {
       const testimonial = new Testimonial(item.name, item.profession, item.rating, item.message, item.imageUrl);
       container.appendChild(testimonial.createTestimonialElement());
     });
   }
   
-  // Call renderTestimonials when the DOM is fully loaded
-  document.addEventListener('DOMContentLoaded', () => renderTestimonials(testimonialsData));
+  // Function to filter testimonials
+  function filterTestimonials(testimonials, filterFn) {
+    return testimonials.filter(filterFn);
+  }
+  
+  // Event listener for filters
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTestimonials(testimonialsData);
+  
+    const ratingFilter = document.getElementById('rating-filter');
+    const professionFilter = document.getElementById('profession-filter');
+  
+    function applyFilters() {
+      const ratingValue = parseFloat(ratingFilter.value);
+      const professionValue = professionFilter.value.toLowerCase();
+  
+      const filteredData = filterTestimonials(testimonialsData, testimonial => {
+        const matchesRating = isNaN(ratingValue) || testimonial.rating >= ratingValue;
+        const matchesProfession = professionValue === '' || testimonial.profession.toLowerCase().includes(professionValue);
+        return matchesRating && matchesProfession;
+      });
+  
+      renderTestimonials(filteredData);
+    }
+  
+    ratingFilter.addEventListener('change', applyFilters);
+    professionFilter.addEventListener('input', applyFilters);
+  });
   
