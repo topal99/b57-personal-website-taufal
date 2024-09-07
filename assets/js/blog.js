@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('projectForm');
     const projectCardsContainer = document.querySelector('.project-cards');
-    let editIndex = null; // Keep track of the project being edited
+    let editIndex = null; // Track project being edited
   
     // Function to convert image to Base64 data URL
     const getImageBase64 = (file) => {
@@ -13,6 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     };
   
+    // Function to calculate duration between two dates
+    const calculateDuration = (startDate, endDate) => {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const durationInMilliseconds = end - start;
+      const durationInDays = Math.floor(durationInMilliseconds / (1000 * 60 * 60 * 24)); // Convert to days
+      return durationInDays;
+    };
+  
     // Load projects from local storage and display on page load
     const loadProjects = () => {
       const projects = JSON.parse(localStorage.getItem('projects')) || [];
@@ -20,6 +29,10 @@ document.addEventListener('DOMContentLoaded', function() {
       projects.forEach((project, index) => {
         const card = document.createElement('div');
         card.classList.add('card');
+        
+        // Calculate project duration
+        const duration = calculateDuration(project.startDate, project.endDate);
+  
         card.innerHTML = `
           <div class="card-content">
             <img src="${project.imageURL}" alt="Project Image" class="project-thumbnail">
@@ -28,30 +41,29 @@ document.addEventListener('DOMContentLoaded', function() {
             <br>
             <p>Start Date: ${project.startDate}</p>
             <p>End Date: ${project.endDate}</p>
-            <p>${project.technologies}</p>
+            <p>Duration: ${duration} days</p> <!-- Display duration -->
           </div>
-          <br>
           <div class="card-actions">
             <button class="edit-btn">Edit</button>
             <button class="delete-btn">Delete</button>
           </div>
         `;
   
-        // Event listener to view details when clicking on card (except Edit/Delete buttons)
+        // Event listener for card click to show details
         card.querySelector('.card-content').addEventListener('click', () => {
           window.location.href = `project-detail.html?id=${index}`;
         });
   
         // Prevent navigation when clicking Edit button
         card.querySelector('.edit-btn').addEventListener('click', (event) => {
-          event.stopPropagation(); // Stop the event from triggering the card click event
-          editProject(index); // Call the edit function
+          event.stopPropagation();
+          editProject(index);
         });
   
         // Prevent navigation when clicking Delete button
         card.querySelector('.delete-btn').addEventListener('click', (event) => {
-          event.stopPropagation(); // Stop the event from triggering the card click event
-          deleteProject(index); // Call the delete function
+          event.stopPropagation();
+          deleteProject(index);
         });
   
         projectCardsContainer.appendChild(card);
@@ -73,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
       // Convert the image to Base64 if a new image is selected
       const imageBase64 = imageFile ? await getImageBase64(imageFile) : null;
   
-      // Get existing projects from local storage
       let projects = JSON.parse(localStorage.getItem('projects')) || [];
   
       const newProject = {
@@ -82,54 +93,44 @@ document.addEventListener('DOMContentLoaded', function() {
         endDate,
         description,
         technologies,
-        imageURL: imageBase64 || (editIndex !== null ? projects[editIndex].imageURL : null) // Use existing image if not edited
+        imageURL: imageBase64 || (editIndex !== null ? projects[editIndex].imageURL : null) // Keep existing image if not edited
       };
   
       if (editIndex !== null) {
-        // Update existing project
         projects[editIndex] = newProject;
-        editIndex = null; // Reset edit mode
+        editIndex = null;
       } else {
-        // Add new project
         projects.push(newProject);
       }
   
-      localStorage.setItem('projects', JSON.stringify(projects)); // Save updated list
-  
-      // Reload the projects to display the new or updated card
+      localStorage.setItem('projects', JSON.stringify(projects));
       loadProjects();
-      
-      // Clear the form
       form.reset();
     });
   
-    // Edit project function
     const editProject = (index) => {
       const projects = JSON.parse(localStorage.getItem('projects')) || [];
       const project = projects[index];
   
-      // Populate form with project data
       document.getElementById('projectName').value = project.name;
       document.getElementById('startDate').value = project.startDate;
       document.getElementById('endDate').value = project.endDate;
       document.getElementById('description').value = project.description;
-      // Check the appropriate technologies
+  
       document.querySelectorAll('input[name="technologies"]').forEach(checkbox => {
         checkbox.checked = project.technologies.includes(checkbox.value);
       });
       
-      editIndex = index; // Set the edit index
+      editIndex = index;
     };
   
-    // Delete project function
     const deleteProject = (index) => {
       let projects = JSON.parse(localStorage.getItem('projects')) || [];
-      projects.splice(index, 1); // Remove project at specified index
-      localStorage.setItem('projects', JSON.stringify(projects)); // Save updated list
-      loadProjects(); // Reload the project list
+      projects.splice(index, 1);
+      localStorage.setItem('projects', JSON.stringify(projects));
+      loadProjects();
     };
   
-    // Load projects on page load
     loadProjects();
   });
   
