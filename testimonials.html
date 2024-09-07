@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html xml:lang>
+<html lang="en">
 <head>
-  <title>Project Detail</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="assets/styles/index.css">
-  <link rel="stylesheet" href="assets/styles/project-detail.css">
+  <link rel="stylesheet" href="assets/styles/testimonials.css">
+  <title>Testimonials</title>
 </head>
-<!-- navbar start -->
+<body>
+
+  <!-- navbar start -->
 <nav class="navbar">
     <div class="container">
       <div class="navbar-content">
@@ -36,40 +40,12 @@
     </div>
   </nav>
 
-<body>    
-    <!-- Main Content -->
- <main class="project-detail">
-    <!-- Project Title -->
-    <div class="header-container">
-      <h1 id="projectName"></h1>
-    </div>
+  <div class="testimonials-container">
+    <!-- Testimonial elements will be added here by JavaScript -->
+  </div>
 
-    <div class="image-and-info">
-      <!-- Project Image -->
-      <img id="projectImage" src="https://via.placeholder.com/200" alt="Project">
-
-      <div class="info-section">
-        <div class="duration-info">
-          <!-- Project Duration -->
-          <p id="projectDate"></p>
-          <p id="duration"></p>
-        </div>
-        <!-- Technologies Used -->
-        <section class="technologies">
-          <ul id="projectTechnologies">
-            <!-- Example Technologies -->
-          </ul>
-        </section>
-      </div>
-    </div>
-
-    <!-- Project Description -->
-    <section class="description">
-      <h3>Description</h3>
-      <p id="projectDescription"></p>
-    </section>
-  </main>
-
-  <script src="assets/js/project-detail.js"></script>
+  <!-- Include the JavaScript file -->
+  <script src="assets/js/testimonials.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
 </body>
 </html>
