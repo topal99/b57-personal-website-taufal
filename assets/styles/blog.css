@@ -1,4 +1,9 @@
-/* Basic Styles */
+.card-content .project-thumbnail {
+  width: 100%;
+  height: 200px;
+
+}
+
 .form-section {
     padding: 20px;
     max-width: 600px;
