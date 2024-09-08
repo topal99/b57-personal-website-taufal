@@ -1,74 +1,138 @@
 <!DOCTYPE html>
-<html xml:lang>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="assets/styles/index.css">
-<title>
-    Home
-</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/styles/index.css">
+  <link rel="stylesheet" href="assets/styles/blog.css">
 </head>
+<body>
 
 <!-- navbar start -->
-<nav class="navbar">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <div class="navbar-content">
-      <div class="logo-container">
-        <img class="logo" src="https://dumbways.id/assets/images/brandwhite.png" alt="Your Company">
-      </div>
-      <div class="menu">
-        <a href="index.html" class="menu-link">Home</a>
-        <a href="blog.html" class="menu-link">My Project</a>
-        <a href="contact.html" class="menu-link">Contact Form</a>
-        <a href="testimonials.html" class="menu-link">Testimonials</a>
-      </div>
-      <div class="mobile-menu-button">
-        <button id="menu-toggle" class="mobile-menu-icon">
-          <span class="sr-only">Open main menu</span>
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div id="mobile-menu" class="mobile-menu">
-      <a href="index.html" class="mobile-menu-link">Home</a>
-      <a href="blog.html" class="mobile-menu-link">My Project</a>
-      <a href="contact.html" class="mobile-menu-link">Contact Us</a>
-      <a href="testimonials.html" class="menu-link">Testimonials</a>
+    <a class="navbar-brand" href="#">
+      <img class="logo" src="https://dumbways.id/assets/images/brandwhite.png" alt="Your Company" height="40">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a href="index.html" class="nav-link text-white">Home</a></li>
+        <li class="nav-item"><a href="blog.html" class="nav-link text-white">Add Project</a></li>
+        <li class="nav-item"><a href="contact.html" class="nav-link text-white">Contact Form</a></li>
+        <li class="nav-item"><a href="testimonials.html" class="nav-link text-white">Testimonials</a></li>
+      </ul>
     </div>
   </div>
 </nav>
+<!-- navbar end -->
 
-<body>        
-  <div class="container-card">
-    <div class="content">
+<div class="container mt-5 pt-5 shadow-lg">
+  <div class="row">
+    <div class="col-lg-8 text-justify mt-5 pt-5">
       <h1>Welcome to my personal website!</h1>
+      <br>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tristique purus orci libero egestas ut. Augue suspendisse blandit lorem massa ipsum, urna, egestas mi, lacinia. Dui fusce etiam
-        libero, lectus amet, risus molestie malesuada. Odio nam purus consectetur euismod congue leo quisque. Turpis amet sollicitudin nunc non in lectus dolor amet. Amet ullamcorper faucibus tincidunt
-        accumsan ac adipiscing arcu. Donec tristique at proin maecenas. Ante elit et iaculis ac sit. It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+        libero, lectus amet, risus molestie malesuada. Odio nam purus consectetur euismod congue leo quisque. Turpis amet sollicitudin nunc non in lectus dolor amet.
       </p>
       
-      <div class="button-group">
-        <a href="contact.html" class="contact-btn">Contact</a>
-        <a class="download-btn">Download CV</a>
+      <div class="d-flex">
+        <a href="contact.html" class="btn btn-primary mr-3">Contact</a>
+        <a class="btn btn-secondary">Download CV</a>
       </div>
   
       <!-- social button start -->
-      <div class="sharing-buttons">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
-          <a href="#"><i class="fab fa-pinterest-p"></i></a>
-        </div>
+      <div class="mt-3">
+        <a href="#" class="btn btn-outline-primary mr-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="btn btn-outline-info mr-2"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="btn btn-outline-primary mr-2"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="btn btn-outline-danger"><i class="fab fa-pinterest-p"></i></a>
+      </div>
       <!-- social button end -->
     </div>
-    <div class="card">
-      <img src="F:\b57-personal-website-taufal\assets\img\profile.jpg" alt="Muhammad Taufal" />
-      <h2>Muhammad Taufal</h2>
-      <p>Fullstack Developer</p>
+    
+    <div class="col-lg-4 text-center pb-3">
+      <div class="card pb-0">
+        <img src="F:\b57-personal-website-taufal\assets\img\profile.jpg" class="card-img-top img-fluid" alt="Muhammad Taufal" style="max-width: 100%">
+        <div class="card-body">
+          <h2 class="card-title">Muhammad Taufal</h2>
+          <p class="card-text">Fullstack Developer</p>
+        </div>
+      </div>
     </div>
   </div>
-  <script src="assets/js/index.js"></script>
+</div>
+  
+<!-- Form Section -->
+<section class="form-section" hidden>
+<form id="projectForm" class="contact-form">
+  <label for="projectName">Project Name</label>
+  <div class="input-group">
+    <input type="text" id="projectName" name="projectName" required>
+  </div>
+  <div class="date-inputs">
+    <div class="input-group">
+      <label for="startDate">Start Date</label>
+      <input type="date" id="startDate" name="startDate" required>
+    </div>
+    <div class="input-group">
+      <label for="endDate">End Date</label>
+      <input type="date" id="endDate" name="endDate" required>
+    </div>
+  </div>
+  <div class="input-group">
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
+  </div>
+  <div class="input-group">
+    <label>Technologies</label>
+    <div class="tech-checkboxes">
+      <div style="display: flex;">
+        <input type="checkbox" id="nodejs" name="technologies" value="Node.js">
+        <label for="nodejs">Node.js</label>
+      </div>
+      <div  style="display: flex;">
+        <input type="checkbox" id="reactjs" name="technologies" value="React.js">
+        <label for="reactjs">React.js</label>
+      </div>
+      <div  style="display: flex;">
+        <input type="checkbox" id="nextjs" name="technologies" value="Next.js">
+        <label for="nextjs">Next.js</label>
+      </div>
+      <div  style="display: flex;">
+        <input type="checkbox" id="typescript" name="technologies" value="TypeScript">
+        <label for="typescript">TypeScript</label>
+      </div>
+    </div>
+  </div>
+  <div class="input-group">
+    <label for="uploadImage">Upload Image</label>
+    <input type="file" id="uploadImage" name="uploadImage" accept="image/*" required>
+  </div>
+  <div class="submit-button">
+    <button type="submit">Submit</button>
+  </div>
+</form>
+</section>
+
+<!-- !-- My Project Section --> -->
+<section style="text-align:center; margin-top: 50px;">
+  <h2>My Project</h2>  
+  <div class="project-cards">
+    </div>
+    <!-- Add more cards dynamically with JavaScript -->
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/index.js"></script>
+<script src="assets/js/blog.js"></script>
 </body>
 </html>

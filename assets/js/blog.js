@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="card-content">
             <img src="${project.imageURL}" alt="Project Image" class="project-thumbnail">
             <br>
-            <h3>${project.name}</h3>
+            <h4 class="mt-4">${project.name}</h4>
             <br>
             <p>Start Date: ${project.startDate}</p>
             <p>End Date: ${project.endDate}</p>
@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
           window.location.href = `project-detail.html?id=${index}`;
         });
   
+        
         // Prevent navigation when clicking Edit button
         card.querySelector('.edit-btn').addEventListener('click', (event) => {
           event.stopPropagation();
