@@ -35,22 +35,23 @@
         <a href="index.html" class="mobile-menu-link">Home</a>
         <a href="blog.html" class="mobile-menu-link">My Project</a>
         <a href="contact.html" class="mobile-menu-link">Contact Us</a>
+        <a href="testimonials.html" class="menu-link">Testimonials</a>
       </div>
     </div>
   </nav>
 
-  <div class="filter-container" style="margin-top: 100px; text-align: center;">
-    <label for="rating-filter">Filter by Rating:</label>
-    <select id="rating-filter">
-      <option value="">All Ratings</option>
-      <option value="5">5 Stars</option>
-      <option value="4">4 Stars</option>
-      <option value="3">3 Stars</option>
-    </select>
-
-    <label for="profession-filter">Filter by Profession:</label>
-    <input type="text" id="profession-filter" placeholder="Enter profession">
+  <!-- Filter Bintang -->
+   <header style="margin-top: 100px; text-align: center;">
+    <h1>My Testimonials</h1>
+   </header>
+<div class="filter-container">
+  <h3>Rating By Star</h3>
+  <div class="stars-filter" id="stars-filter">
+    <span class="all-rating" id="all-rating">All</span>
+    <!-- Ikon bintang untuk memfilter akan ditambahkan di sini oleh JavaScript -->
   </div>
+</div>
+
 
   <div class="testimonials-container">
     <!-- Testimonial elements will be added here by JavaScript -->
@@ -58,6 +59,5 @@
 
   <!-- Include the JavaScript file -->
   <script src="assets/js/testimonials.js"></script>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
 </body>
 </html>

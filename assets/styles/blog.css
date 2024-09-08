@@ -8,6 +8,7 @@
     padding: 20px;
     max-width: 600px;
     margin: auto;
+    background-color: white;
   }
   
   .contact-form {
@@ -57,6 +58,7 @@
   
   .submit-button button {
     padding: 10px 20px;
+    width: 100%;
     background-color: #FF5733;
     color: white;
     border: none;
