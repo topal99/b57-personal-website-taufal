@@ -59,50 +59,28 @@ class Testimonial {
   }
 }
 
-// Dummy data
-const testimonialsData = [
-  {
-    "name": "John Doe",
-    "profession": "Software Engineer",
-    "rating": 5,
-    "message": "Great service! The team was professional, and the project was delivered on time. I’m really happy with the results.",
-    "imageUrl": "https://randomuser.me/api/portraits/men/1.jpg"
-  },
-  {
-    "name": "Jane Smith",
-    "profession": "Product Manager",
-    "rating": 4,
-    "message": "I was impressed with the level of expertise and attention to detail. The communication was excellent throughout the project.",
-    "imageUrl": "https://randomuser.me/api/portraits/women/2.jpg"
-  },
-  {
-    "name": "Michael Brown",
-    "profession": "UX Designer",
-    "rating": 3,
-    "message": "Good experience overall, though there were some delays. The final product met my expectations, and I would work with them again.",
-    "imageUrl": "https://randomuser.me/api/portraits/men/3.jpg"
-  },
-  {
-    "name": "Jane Smith",
-    "profession": "Product Manager",
-    "rating": 2,
-    "message": "I was impressed with the level of expertise and attention to detail. The communication was excellent throughout the project.",
-    "imageUrl": "https://randomuser.me/api/portraits/women/2.jpg"
-  },
-  {
-    "name": "Jane Smith",
-    "profession": "Product Manager",
-    "rating": 1,
-    "message": "I was impressed with the level of expertise and attention to detail. The communication was excellent throughout the project.",
-    "imageUrl": "https://randomuser.me/api/portraits/women/2.jpg"
-  },
-];
+// Function to fetch testimonials data from external API
+async function fetchTestimonials() {
+  try {
+    const response = await fetch('https://api.npoint.io/abd2b6c91c59bc2964cc'); // Ganti dengan URL API npoint.io
+    if (!response.ok) {
+      throw new Error('Failed to fetch testimonials');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return []; // Return empty array if there's an error
+  }
+}
 
 // Function to render testimonials (clear previous content first)
-function renderTestimonials(data) {
+async function renderTestimonials() {
   const container = document.querySelector('.testimonials-container');
   container.innerHTML = '';  // Clear previous testimonials
-  data.forEach(item => {
+  const testimonialsData = await fetchTestimonials(); // Fetch testimonials data from API
+
+  testimonialsData.forEach(item => {
     const testimonial = new Testimonial(item.name, item.profession, item.rating, item.message, item.imageUrl);
     container.appendChild(testimonial.createTestimonialElement()); // Append new testimonials
   });
@@ -118,7 +96,7 @@ function createRatingFilterStars() {
   allRating.textContent = 'All';
   allRating.className = 'all-rating';
   allRating.addEventListener('click', () => {
-    renderTestimonials(testimonialsData);  // Render all testimonials
+    renderTestimonials();  // Render all testimonials
   });
   starsFilter.appendChild(allRating);
 
@@ -158,13 +136,24 @@ function filterByRating(rating) {
 }
 
 // Function to apply filters by rating
-function applyFilters(ratingValue) {
+async function applyFilters(ratingValue) {
+  const testimonialsData = await fetchTestimonials(); // Fetch testimonials data from API
   const filteredData = filterTestimonials(testimonialsData, filterByRating(ratingValue));
-  renderTestimonials(filteredData); // Render filtered testimonials
+  renderFilteredTestimonials(filteredData); // Render filtered testimonials
+}
+
+// Function to render filtered testimonials
+function renderFilteredTestimonials(data) {
+  const container = document.querySelector('.testimonials-container');
+  container.innerHTML = '';  // Clear previous testimonials
+  data.forEach(item => {
+    const testimonial = new Testimonial(item.name, item.profession, item.rating, item.message, item.imageUrl);
+    container.appendChild(testimonial.createTestimonialElement()); // Append new testimonials
+  });
 }
 
 // Event listener to initialize the page
 document.addEventListener('DOMContentLoaded', () => {
-  renderTestimonials(testimonialsData); // Render all testimonials initially
+  renderTestimonials(); // Render all testimonials initially
   createRatingFilterStars(); // Create filter stars
 });
