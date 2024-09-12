@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "express": "^4.21.0",
+    "handlebars": "^4.7.8",
+    "hbs": "^4.2.0"
+  },
+  "name": "b57-personal-website-taufal",
+  "version": "1.0.0",
+  "description": "personal-website",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

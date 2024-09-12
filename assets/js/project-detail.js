@@ -12,40 +12,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const projectId = urlParams.get('id');
+  // Get the project ID from the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const projectId = urlParams.get('id');
 
-    // Function to calculate duration between two dates
-        const calculateDuration = (startDate, endDate) => {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            const durationInMilliseconds = end - start;
-            const durationInDays = Math.floor(durationInMilliseconds / (1000 * 60 * 60 * 24)); // Convert to days
-            return durationInDays;
-        };
+  // Retrieve the projects from local storage
+  const projects = JSON.parse(localStorage.getItem('projects')) || [];
 
-        // Function to get query parameter from URL
-        const getQueryParameter = (param) => {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        };
+  // Get the project details
+  const project = projects[projectId];
 
-    // Get projects from local storage
-    const projects = JSON.parse(localStorage.getItem('projects')) || [];
+  if (project) {
+    // Create the project detail content
+    const projectDetail = `
+      <div class="card-body">
+        <h5 class="card-title">${project.projectName}</h5>
+        <p class="card-text"><strong>Start Date:</strong> ${project.startDate}</p>
+        <p class="card-text"><strong>End Date:</strong> ${project.endDate}</p>
+        <p class="card-text"><strong>Technologies:</strong> ${project.technologies.join(', ')}</p>
+          <div class="card mt-3">
+            <p class="card-text text-justify">${project.description}</p>
+          </div>
+      </div>
+    `;
 
-    if (projectId !== null && projects[projectId]) {
-      const project = projects[projectId];
-
-      // Calculate and display the project duration
-      const duration = calculateDuration(project.startDate, project.endDate);
-      document.getElementById('duration').textContent = `Duration: ${duration} days`;
-
-      document.getElementById('projectName').textContent = project.name;
-      document.getElementById('projectDate').textContent = `From: ${project.startDate} To: ${project.endDate}`;
-      document.getElementById('projectTechnologies').textContent = `${project.technologies.join(', ')}`;
-      document.getElementById('projectImage').src = project.imageURL;
-      document.getElementById('projectDescription').textContent = project.description;
-    } else {
-      document.body.innerHTML = '<p>Project not found</p>';
-    }
-  });
+    // Insert the project detail content into the projectDetail div
+    document.getElementById('projectDetail').innerHTML = projectDetail;
+  }
+});
