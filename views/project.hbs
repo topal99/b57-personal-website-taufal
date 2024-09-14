@@ -30,33 +30,35 @@
   </div>
 </nav>
 <!-- navbar end -->
-
 <body>
   <div class="mt-5 pt-5 text-center">
     <h1>My Project</h1>
   </div>
-
 <section class="mt-5">
   <div class="container">
-    <div class="row">
-      {{#each projects}}
-        <div class="col-md-4 mb-4">
-          <div class="card">
-            <img src="/assets/img/brandlogo.webp" class="card-img-top" alt="{{projectName}}">
-            <div class="card-body">
-              <h5 class="card-title">{{projectName}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{startDate}} - {{endDate}}</h6>
-              <p class="card-text">{{technologies}}</p>
-              <p class="card-text text-wrap">{{description}}</p>
-              <div class="d-flex justify-content-between mt-4">
-                <button class="btn btn-primary">Edit</button>
-                <button class="btn btn-danger">Delete</button>
+    <div class="row mb-4">
+      <div class="col text-start">
+        <a href="/add-project" class="btn btn-primary">Add some project</a>
+      </div>
+    </div>
+      <div class="row d-flex">
+        {{#each projects}}
+          <div class="col-md-4 mb-4">
+            <div class="card" onclick="redirectToDetail('{{projectId}}')">
+              <img src="{{imageUrl}}" class="card-img-top" alt="{{projectName}}">
+              <div class="card-body">
+                <a href="project-detail/{{@index}}" class="card-title">{{projectName}}</a>
+                <h6 class="card-subtitle mb-2 mt-3 text-muted">{{startDate}} - {{endDate}}</h6>
+                <p class="card-text">{{technologies}}</p>
+                <div class="d-flex justify-content-between mt-4">
+                  <a href="/edit-project/{{@index}}" class="btn btn-primary">Edit</a>
+                  <a href="/delete-project/{{@index}}" class="btn btn-danger">Delete</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      {{/each}}
-    </div>
+        {{/each}}
+      </div>
   </div>
 </section>
 

@@ -3,10 +3,10 @@
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/styles/index.css">
-<link rel="stylesheet" href="assets/styles/blog.css">
+  <link rel="stylesheet" href="/assets/styles/index.css">
+  <link rel="stylesheet" href="/assets/styles/blog.css">
 
-<title>Add project</title>
+<title>Edit project</title>
 </head>
 <!-- navbar start -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -20,9 +20,9 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item"><a href="/" class="nav-link text-white custom-hover">Home</a></li>
-        <li class="nav-item"><a href="add-project" class="nav-link text-white custom-hover">Add Project</a></li>
-        <li class="nav-item"><a href="contact" class="nav-link text-white custom-hover">Contact Form</a></li>
-        <li class="nav-item"><a href="testimonials" class="nav-link text-white custom-hover">Testimonials</a></li>
+        <li class="nav-item"><a href="/add-project" class="nav-link text-white custom-hover">Add Project</a></li>
+        <li class="nav-item"><a href="/contact" class="nav-link text-white custom-hover">Contact Form</a></li>
+        <li class="nav-item"><a href="/testimonials" class="nav-link text-white custom-hover">Testimonials</a></li>
       </ul>
     </div>
   </div>
@@ -31,32 +31,31 @@
 
 <body>
   <div class="mt-5 pt-5 text-center">
-    <h1>Create your project</h1>
-    <p>Add your project here</p>
+    <h1>Edit your project</h1>
   </div>
     
 <!-- Form Section -->
 <section class="form-section">
-  <form acton="project" method="post" class="contact-form">
+  <form acton="edit-project" method="post" class="contact-form">
     <label for="projectName">Project Name</label>
     <div class="input-group">
-      <input type="text" name="projectName" required>
+      <input type="text" name="projectName" value="{{projects.projectName}}" required>
     </div>
 
     <div class="date-inputs">
       <div class="input-group">
         <label for="startDate">Start Date</label>
-        <input type="date" name="startDate" required>
+        <input type="date" name="startDate" value="{{projects.startDate}}" required>
       </div>
       <div class="input-group">
         <label for="endDate">End Date</label>
-        <input type="date" name="endDate" required>
+        <input type="date" name="endDate" value="{{projects.endDate}}" required>
       </div>
     </div>
 
     <div class="input-group">
       <label for="description">Description</label>
-      <textarea name="description" rows="4" required></textarea>
+      <textarea name="description" rows="4" required>{{projects.description}}</textarea>
     </div>
     <div class="input-group"></div>
       <label for="uploadImage">Upload Image</label>
@@ -65,20 +64,20 @@
     {{!-- <div class="input-group">
       <label class="pr-2">Technologies</label>
       <div class="tech-checkboxes">
+          <div style="display: flex;">
+          <input type="checkbox" id="nodejs" name="technologies" value="Nodejs" {{#if projects.technologies.includes('Nodejs')}}checked{{/if}}>
+          <label for="nodejs">Node.js</label>
+        </div>
         <div style="display: flex;">
-          <input type="checkbox" name="technologies" value="Nodejs">
-          <label for="nodejs">Nodejs</label>
+          <input type="checkbox" id="reactjs" name="technologies" value="Reactjs" {{#if projects.technologies.includes('Reactjs')}}checked{{/if}}>
+          <label for="reactjs">React.js</label>
         </div>
-        <div  style="display: flex;">
-          <input type="checkbox" name="technologies" value="Reactjs">
-          <label for="reactjs">Reactjs</label>
+        <div style="display: flex;">
+          <input type="checkbox" id="nextjs" name="technologies" value="Nextjs" {{#if projects.technologies.includes('Nextjs')}}checked{{/if}}>
+          <label for="nextjs">Next.js</label>
         </div>
-        <div  style="display: flex;">
-          <input type="checkbox" name="technologies" value="Nextjs">
-          <label for="nextjs">Nextjs</label>
-        </div>
-        <div  style="display: flex;">
-          <input type="checkbox" name="technologies" value="TypeScript">
+        <div style="display: flex;">
+          <input type="checkbox" id="typescript" name="technologies" value="TypeScript" {{#if projects.technologies.includes('TypeScript')}}checked{{/if}}>
           <label for="typescript">TypeScript</label>
         </div>
       </div> --}}
