@@ -6,9 +6,7 @@
   <link rel="stylesheet" href="assets/styles/index.css">
 <link rel="stylesheet" href="assets/styles/blog.css">
 
-<title>
-    My Project
-</title>
+<title>Add project</title>
 </head>
 <!-- navbar start -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -33,31 +31,60 @@
 
 <body>
   <div class="mt-5 pt-5 text-center">
-    <h1>My Project</h1>
+    <h1>Create your project</h1>
+    <p>Add your project here</p>
   </div>
-
-<section class="mt-5">
-  <div class="container">
-    <div class="row">
-      {{#each projects}}
-        <div class="col-md-4 mb-4">
-          <div class="card">
-            <img src="/assets/img/brandlogo.webp" class="card-img-top" alt="{{projectName}}">
-            <div class="card-body">
-              <h5 class="card-title">{{projectName}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{startDate}} - {{endDate}}</h6>
-              <p class="card-text">{{technologies}}</p>
-              <p class="card-text text-wrap">{{description}}</p>
-              <div class="d-flex justify-content-between mt-4">
-                <button class="btn btn-primary">Edit</button>
-                <button class="btn btn-danger">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      {{/each}}
+    
+<!-- Form Section -->
+<section class="form-section">
+  <form acton="project" method="post" class="contact-form">
+    <label for="projectName">Project Name</label>
+    <div class="input-group">
+      <input type="text" name="projectName" required>
     </div>
-  </div>
+
+    <div class="date-inputs">
+      <div class="input-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" name="startDate" required>
+      </div>
+      <div class="input-group">
+        <label for="endDate">End Date</label>
+        <input type="date" name="endDate" required>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="description">Description</label>
+      <textarea name="description" rows="4" required></textarea>
+    </div>
+
+    <div class="input-group">
+      <label class="pr-2">Technologies</label>
+      <div class="tech-checkboxes">
+        <div style="display: flex;">
+          <input type="checkbox" name="technologies" value="Node.js">
+          <label for="nodejs">Node.js</label>
+        </div>
+        <div  style="display: flex;">
+          <input type="checkbox" name="technologies" value="React.js">
+          <label for="reactjs">React.js</label>
+        </div>
+        <div  style="display: flex;">
+          <input type="checkbox" name="technologies" value="Next.js">
+          <label for="nextjs">Next.js</label>
+        </div>
+        <div  style="display: flex;">
+          <input type="checkbox" name="technologies" value="TypeScript">
+          <label for="typescript">TypeScript</label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="submit-button mt-3">
+      <button type="submit">Submit</button>
+    </div>
+  </form>
 </section>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

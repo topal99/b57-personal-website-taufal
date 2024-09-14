@@ -1,3 +1,8 @@
+.custom-hover:hover {
+  color: #ffcc00 !important; /* Ganti dengan warna yang Anda inginkan */
+  background-color: #343a40; /* Ganti dengan warna yang Anda inginkan */
+}
+
 /* Project Section */
 .project-section {
   max-width: 1200px;

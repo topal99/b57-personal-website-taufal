@@ -3,34 +3,57 @@ const app = express();
 const port = 3000;
 const path = require('path');
 
-app.set("view engine", "hbs")
+app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
-
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(express.urlencoded({ extended: true }));
+app.get("/", home);
+app.get("/project", project);
+app.get("/add-project", addProjectView);
+app.get("/contact", contact);
+app.post("/add-project", addProject);
+app.get("/project-detail", projectDetail);
+app.get("/testimonials", testimonials);
 
-app.get("/", (req, res) => {
+const projects = [];
+
+function home(req, res) {
   res.render("index")
-});
+};
 
-app.get("/project", (req, res) => {
-  res.render("project")
-});
+function project(req, res) {
+  res.render("project", {projects})
+};
 
-app.get("/project-detail", (req, res) => {
+function addProjectView (req, res) {
+  res.render("add-project")
+};
+
+function addProject(req, res) {
+  const {projectName, startDate, endDate, description, technologies} = req.body
+
+  const data = {
+    projectName,
+    startDate,
+    endDate,
+    description,
+    technologies
+  };
+
+  projects.unshift(data);
+};
+
+function projectDetail(req, res) {
   res.render("project-detail")
-});
+};
 
-app.get("/contact", (req, res) => {
+function contact(req, res) {
   res.render("contact")
-});
+};
 
-app.get("/testimonials", (req, res) => {
+function testimonials(req, res) {
   res.render("testimonials")
-});
-
-app.get('/', (req, res) => {
-  res.send("hello wewe")
-});
+};
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
