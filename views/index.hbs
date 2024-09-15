@@ -27,6 +27,9 @@
         <li class="nav-item"><a href="contact" class="nav-link text-white custom-hover">Contact Form</a></li>
         <li class="nav-item"><a href="testimonials" class="nav-link text-white custom-hover">Testimonials</a></li>
       </ul>
+    <form action="/logout" method="GET">
+        <button type="submit">Logout</button>
+    </form>    
     </div>
   </div>
 </nav>
@@ -35,7 +38,7 @@
 <div class="container mt-5 pt-5 shadow-lg">
   <div class="row">
     <div class="col-lg-8 pt-5">
-      <h1>Welcome to my personal website!</h1>
+      <h1>Welcome {{username}} to my personal website!</h1>
       <br>
       <p class="text-justify">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tristique purus orci libero egestas ut. Augue suspendisse blandit lorem massa ipsum, urna, egestas mi, lacinia. Dui fusce etiam

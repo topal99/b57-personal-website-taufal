@@ -1,13 +1,16 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const mysql = require('mysql2');
 const path = require('path');
+const bcrypt = require('bcrypt');
+const session = require('express-session');
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.use(express.urlencoded({ extended: true }));
-app.get("/", home);
+app.use(express.urlencoded({ extended: false }));
+app.get("/");
 app.get("/project", project);
 app.get("/add-project", addProjectView);
 app.get("/delete-project/:id", deleteProject)
@@ -15,10 +18,92 @@ app.get("/edit-project/:id", editProject)
 app.get("/contact", contact);
 app.get("/project-detail/:id", projectDetail);
 app.get("/testimonials", testimonials);
-
 app.post("/edit-project/:id", editProjects)
 app.post("/add-project", addProject);
 app.post("/project-detail/:id", projectDetails)
+
+// Konfigurasi database
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'b57-personal-website'
+});
+
+db.connect((err) => {
+  if (err) throw err;
+  console.log('Connected to database');
+});
+
+// Middleware
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true
+}));
+
+// Middleware untuk autentikasi
+function isAuthenticated(req, res, next) {
+  if (req.session.loggedin) {
+      return next();
+  } else {
+      res.redirect('/login');
+  }
+}
+
+// Routes
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  db.query('INSERT INTO tb_user (username, password) VALUES (?, ?)', [username, hashedPassword], (err, result) => {
+      if (err) throw err;
+      res.redirect('/login');
+  });
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  db.query('SELECT * FROM tb_user WHERE username = ?', [username], async (err, results) => {
+      if (err) throw err;
+
+      if (results.length > 0) {
+          const comparison = await bcrypt.compare(password, results[0].password);
+          if (comparison) {
+              req.session.loggedin = true;
+              req.session.username = username;
+              res.redirect('/');
+          } else {
+              res.send('Incorrect Username and/or Password!');
+          }
+      } else {
+          res.send('Incorrect Username and/or Password!');
+      }
+  });
+});
+
+
+
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+      if (err) {
+          return console.log(err);
+      }
+      res.redirect('/login');
+  });
+});
+
+
+
 
 const projects = [
   {
@@ -46,9 +131,10 @@ const projects = [
   },
 ];
 
-function home(req, res) {
-  res.render("index")
-};
+app.get('/', isAuthenticated, (req, res) => {
+  res.render('index', { username: req.session.username });
+});
+
 
 function deleteProject(req, res) {
   const id = req.params.id
