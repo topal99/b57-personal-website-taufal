@@ -21,6 +21,73 @@ app.get("/testimonials", testimonials);
 app.post("/edit-project/:id", editProjects)
 app.post("/add-project", addProject);
 app.post("/project-detail/:id", projectDetails)
+// Routes untuk CRUD
+app.get('/posts', getAllPosts);
+app.get('/posts/:id', getPostById);
+app.post('/posts', createPost);
+app.put('/posts/:id', updatePost);
+
+app.get('/edit-post/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM posts WHERE id = ?', [id], (err, result) => {
+    if (err) throw err;
+    if (result.length > 0) {
+      res.render('edit-post', { post: result[0] });
+    } else {
+      res.send('Post not found');
+    }
+  });
+});
+
+app.post('/edit-post/:id', (req, res) => {
+  const { id } = req.params;
+  const { authorId, title, image, content } = req.body;
+  db.query('UPDATE posts SET authorId = ?, title = ?, image = ?, content = ? WHERE id = ?', [authorId, title, image, content, id], (err, result) => {
+    if (err) throw err;
+    res.redirect('/posts');
+  });
+});
+
+// Mendapatkan semua posts
+function getAllPosts(req, res) {
+  db.query('SELECT * FROM posts', (err, results) => {
+    if (err) throw err;
+    res.render('posts', { posts: results });
+  });
+}
+
+// Mendapatkan post berdasarkan ID
+function getPostById(req, res) {
+  const { id } = req.params;
+  db.query('SELECT * FROM posts WHERE id = ?', [id], (err, result) => {
+    if (err) throw err;
+    res.render('post-detail', { post: result[0] });
+  });
+}
+
+// Membuat post baru
+function createPost(req, res) {
+  const { authorId, title, image, content } = req.body;
+  db.query('INSERT INTO posts (authorId, title, image, content) VALUES (?, ?, ?, ?)', [authorId, title, image, content], (err, result) => {
+    if (err) throw err;
+    res.redirect('/posts');
+  });
+}
+
+// Mengupdate post
+function updatePost(req, res) {
+  const { id } = req.params;
+  const { authorId, title, image, content } = req.body;
+  db.query('UPDATE posts SET authorId = ?, title = ?, image = ?, content = ? WHERE id = ?', [authorId, title, image, content, id], (err, result) => {
+    if (err) throw err;
+    res.redirect('/posts');
+  });
+}
+
+app.get('/add-post', (req, res) => {
+  res.render('add-post');
+});
+
 
 // Konfigurasi database
 const db = mysql.createConnection({
@@ -91,8 +158,6 @@ app.post('/login', (req, res) => {
   });
 });
 
-
-
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
       if (err) {
@@ -100,10 +165,7 @@ app.get('/logout', (req, res) => {
       }
       res.redirect('/login');
   });
-});
-
-
-
+}); 
 
 const projects = [
   {
