@@ -5,27 +5,37 @@ const mysql = require('mysql2');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const methodOverride = require('method-override'); // Tambahkan ini
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.get("/");
-app.get("/project", project);
-app.get("/add-project", addProjectView);
-app.get("/delete-project/:id", deleteProject)
-app.get("/edit-project/:id", editProject)
 app.get("/contact", contact);
-app.get("/project-detail/:id", projectDetail);
 app.get("/testimonials", testimonials);
-app.post("/edit-project/:id", editProjects)
-app.post("/add-project", addProject);
-app.post("/project-detail/:id", projectDetails)
-// Routes untuk CRUD
-app.get('/posts', getAllPosts);
-app.get('/posts/:id', getPostById);
 app.post('/posts', createPost);
 app.put('/posts/:id', updatePost);
+app.use(methodOverride('_method')); // Tambahkan ini
+
+// app.get("/project", project);
+// app.get("/add-project", addProjectView);
+// app.get("/delete-project/:id", deleteProject)
+// app.get("/edit-project/:id", editProject)
+// app.get("/project-detail/:id", projectDetail);
+// app.post("/edit-project/:id", editProjects)
+// app.post("/add-project", addProject);
+// app.post("/project-detail/:id", projectDetails)
+// Routes untuk CRUD
+
+// Middleware untuk autentikasi
+function isAuthenticated(req, res, next) {
+  if (req.session.loggedin) {
+      return next();
+  } else {
+      res.redirect('/login');
+  }
+}
 
 app.get('/edit-post/:id', (req, res) => {
   const { id } = req.params;
@@ -84,11 +94,6 @@ function updatePost(req, res) {
   });
 }
 
-app.get('/add-post', (req, res) => {
-  res.render('add-post');
-});
-
-
 // Konfigurasi database
 const db = mysql.createConnection({
   host: 'localhost',
@@ -109,22 +114,13 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// Middleware untuk autentikasi
-function isAuthenticated(req, res, next) {
-  if (req.session.loggedin) {
-      return next();
-  } else {
-      res.redirect('/login');
-  }
-}
-
 // Routes
 app.get('/login', (req, res) => {
   res.render('login');
 });
 
 app.get('/register', (req, res) => {
-  res.render('register');
+  res.render('register', { username: req.session.username });
 });
 
 app.post('/register', async (req, res) => {
@@ -167,116 +163,114 @@ app.get('/logout', (req, res) => {
   });
 }); 
 
-const projects = [
-  {
-    imageUrl: '/assets/img/brandlogo.webp',
-    projectName: 'Paloma Perry',
-    startDate: '2018-06-15',
-    endDate: '1999-08-29',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',
-  },
-
-  {
-    imageUrl: '/assets/img/brandlogo.webp',
-    projectName: 'asas Perry',
-    startDate: '2018-06-15',
-    endDate: '1999-08-29',
-    description: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like",
-  },
-
-  {
-    imageUrl: '/assets/img/brandlogo.webp',
-    projectName: 'asas Perry',
-    startDate: '2018-06-15',
-    endDate: '1999-08-29',
-    description: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like",
-  },
-];
-
 app.get('/', isAuthenticated, (req, res) => {
   res.render('index', { username: req.session.username });
 });
 
+app.get('/posts', isAuthenticated, getAllPosts, (req, res) => {
+  res.render('posts', { username: req.session.username });
+});;
 
-function deleteProject(req, res) {
-  const id = req.params.id
-  
-  projects.splice(id, 1);
-  res.redirect("/project");
-};
+app.get('/posts/:id', isAuthenticated, getPostById, (req, res) => {
+  res.render('posts', { username: req.session.username });
+});;;
 
-function editProject(req, res) {
-  const id = req.params.id
-  
-  res.render("edit-project", {projects: projects[id] });
-};
-
-function editProjects(req, res) {
-  const id = req.params.id
-  const {imageUrl, projectName, startDate, endDate, description} = req.body;
-  
-  projects[id] = {
-    imageUrl : "/assets/img/profile.jpg",
-    projectName,
-    startDate,
-    endDate,
-    description,
-  };
-
-  res.redirect("/project")
-};
-
-function project(req, res) {
-  res.render("project", {projects})
-};
-
-function addProjectView (req, res) {
-  res.render("add-project")
-};
-
-function addProject(req, res) {
-  const {imageUrl, projectName, startDate, endDate, description} = req.body
-
-  projects.push({
-    imageUrl : "/assets/img/brandlogo.webp",
-    projectName,
-    startDate,
-    endDate,
-    description,
-    // technologies,
-  });
-
-  res.redirect("project");
-};
+app.get('/add-post', isAuthenticated, (req, res) => {
+  res.render('add-post', { username: req.session.username });
+});
 
 function contact(req, res) {
   res.render("contact")
 };
-function projectDetails(req, res) {
-  const id = req.params.id
-  const {imageUrl, projectName, startDate, endDate, description} = req.body;
-
-  projects[id] = {
-    imageUrl : "/assets/img/profile.jpg",
-    projectName,
-    startDate,
-    endDate,
-    description,
-  };
-
-  res.render("project-detail", {projects: projects[id] });
-};
-
-function projectDetail(req, res) {
-  const id = req.params.id
-  const {imageUrl, projectName, startDate, endDate, description} = req.body;
-
-  res.render("project-detail", {projects: projects[id] });
-}
 
 function testimonials(req, res) {
   res.render("testimonials")
 };
+
+app.delete('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(`Deleting post with id: ${id}`);  // Logging untuk cek apakah route ini terpanggil
+  db.query('DELETE FROM posts WHERE id = ?', [id], (err, result) => {
+    if (err) throw err;
+    console.log('Post deleted successfully');  // Logging untuk cek apakah query berhasil
+    res.redirect('/posts');
+  });
+});
+
+
+// function deleteProject(req, res) {
+//   const id = req.params.id
+  
+//   projects.splice(id, 1);
+//   res.redirect("/project");
+// };
+
+// function editProject(req, res) {
+//   const id = req.params.id
+  
+//   res.render("edit-project", {projects: projects[id] });
+// };
+
+// function editProjects(req, res) {
+//   const id = req.params.id
+//   const {imageUrl, projectName, startDate, endDate, description} = req.body;
+  
+//   projects[id] = {
+//     imageUrl : "/assets/img/profile.jpg",
+//     projectName,
+//     startDate,
+//     endDate,
+//     description,
+//   };
+
+//   res.redirect("/project")
+// };
+
+// function project(req, res) {
+//   res.render("project", {projects})
+// };
+
+// function addProjectView (req, res) {
+//   res.render("add-project")
+// };
+
+// function addProject(req, res) {
+//   const {imageUrl, projectName, startDate, endDate, description} = req.body
+
+//   projects.push({
+//     imageUrl : "/assets/img/brandlogo.webp",
+//     projectName,
+//     startDate,
+//     endDate,
+//     description,
+//     // technologies,
+//   });
+
+//   res.redirect("project");
+// };
+
+// function projectDetails(req, res) {
+//   const id = req.params.id
+//   const {imageUrl, projectName, startDate, endDate, description} = req.body;
+
+//   projects[id] = {
+//     imageUrl : "/assets/img/profile.jpg",
+//     projectName,
+//     startDate,
+//     endDate,
+//     description,
+//   };
+
+//   res.render("project-detail", {projects: projects[id] });
+// };
+
+// function projectDetail(req, res) {
+//   const id = req.params.id
+//   const {imageUrl, projectName, startDate, endDate, description} = req.body;
+
+//   res.render("project-detail", {projects: projects[id] });
+// }
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
