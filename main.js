@@ -5,94 +5,37 @@ const mysql = require('mysql2');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const methodOverride = require('method-override'); // Tambahkan ini
+const methodOverride = require('method-override');
+const multer = require('multer');
 
-app.set("view engine", "hbs");
-app.set("views", path.join(__dirname, "views"));
+// Konfigurasi storage untuk multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // Pastikan folder ini ada
+  },
+  filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname)); // Menggunakan timestamp sebagai nama file
+  }
+});
+
+const upload = multer({ storage: storage });
+
+// Set up view engine
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Middleware
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method')); // Tambahkan ini
+
+// Routes
 app.get("/");
 app.get("/contact", contact);
 app.get("/testimonials", testimonials);
-app.post('/posts', createPost);
-app.put('/posts/:id', updatePost);
-app.use(methodOverride('_method')); // Tambahkan ini
 
-// app.get("/project", project);
-// app.get("/add-project", addProjectView);
-// app.get("/delete-project/:id", deleteProject)
-// app.get("/edit-project/:id", editProject)
-// app.get("/project-detail/:id", projectDetail);
-// app.post("/edit-project/:id", editProjects)
-// app.post("/add-project", addProject);
-// app.post("/project-detail/:id", projectDetails)
-// Routes untuk CRUD
-
-// Middleware untuk autentikasi
-function isAuthenticated(req, res, next) {
-  if (req.session.loggedin) {
-      return next();
-  } else {
-      res.redirect('/login');
-  }
-}
-
-app.get('/edit-post/:id', (req, res) => {
-  const { id } = req.params;
-  db.query('SELECT * FROM posts WHERE id = ?', [id], (err, result) => {
-    if (err) throw err;
-    if (result.length > 0) {
-      res.render('edit-post', { post: result[0] });
-    } else {
-      res.send('Post not found');
-    }
-  });
-});
-
-app.post('/edit-post/:id', (req, res) => {
-  const { id } = req.params;
-  const { authorId, title, image, content } = req.body;
-  db.query('UPDATE posts SET authorId = ?, title = ?, image = ?, content = ? WHERE id = ?', [authorId, title, image, content, id], (err, result) => {
-    if (err) throw err;
-    res.redirect('/posts');
-  });
-});
-
-// Mendapatkan semua posts
-function getAllPosts(req, res) {
-  db.query('SELECT * FROM posts', (err, results) => {
-    if (err) throw err;
-    res.render('posts', { posts: results });
-  });
-}
-
-// Mendapatkan post berdasarkan ID
-function getPostById(req, res) {
-  const { id } = req.params;
-  db.query('SELECT * FROM posts WHERE id = ?', [id], (err, result) => {
-    if (err) throw err;
-    res.render('post-detail', { post: result[0] });
-  });
-}
-
-// Membuat post baru
-function createPost(req, res) {
-  const { authorId, title, image, content } = req.body;
-  db.query('INSERT INTO posts (authorId, title, image, content) VALUES (?, ?, ?, ?)', [authorId, title, image, content], (err, result) => {
-    if (err) throw err;
-    res.redirect('/posts');
-  });
-}
-
-// Mengupdate post
-function updatePost(req, res) {
-  const { id } = req.params;
-  const { authorId, title, image, content } = req.body;
-  db.query('UPDATE posts SET authorId = ?, title = ?, image = ?, content = ? WHERE id = ?', [authorId, title, image, content, id], (err, result) => {
-    if (err) throw err;
-    res.redirect('/posts');
-  });
-}
+// Gunakan middleware upload dalam route
+app.post('/posts', upload.single('image'), createPost);
 
 // Konfigurasi database
 const db = mysql.createConnection({
@@ -114,9 +57,40 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// Routes
+// Middleware untuk autentikasi
+function isAuthenticated(req, res, next) {
+  if (req.session.loggedin) {
+      return next();
+  } else {
+      res.redirect('/login');
+  }
+}
+
+// Routes login
 app.get('/login', (req, res) => {
   res.render('login');
+});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  // Adjust query to search by email instead of username
+  db.query('SELECT * FROM tb_user WHERE email = ?', [email], async (err, results) => {
+      if (err) throw err;
+
+      if (results.length > 0) {
+          const comparison = await bcrypt.compare(password, results[0].password);
+          if (comparison) {
+              req.session.loggedin = true;
+              req.session.username = results[0].username;  // Store username in session
+              res.redirect('/');
+          } else {
+              res.send('Incorrect Email and/or Password!');
+          }
+      } else {
+          res.send('Incorrect Email and/or Password!');
+      }
+  });
 });
 
 app.get('/register', (req, res) => {
@@ -124,33 +98,14 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  db.query('INSERT INTO tb_user (username, password) VALUES (?, ?)', [username, hashedPassword], (err, result) => {
+  // Insert the new user into the database, including email
+  db.query('INSERT INTO tb_user (email, username, password) VALUES (?, ?, ?)', 
+  [email, username, hashedPassword], (err, result) => {
       if (err) throw err;
       res.redirect('/login');
-  });
-});
-
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-
-  db.query('SELECT * FROM tb_user WHERE username = ?', [username], async (err, results) => {
-      if (err) throw err;
-
-      if (results.length > 0) {
-          const comparison = await bcrypt.compare(password, results[0].password);
-          if (comparison) {
-              req.session.loggedin = true;
-              req.session.username = username;
-              res.redirect('/');
-          } else {
-              res.send('Incorrect Username and/or Password!');
-          }
-      } else {
-          res.send('Incorrect Username and/or Password!');
-      }
   });
 });
 
@@ -162,6 +117,86 @@ app.get('/logout', (req, res) => {
       res.redirect('/login');
   });
 }); 
+
+app.use('/uploads', express.static('uploads'));
+
+function createPost(req, res) {
+  const { title, content, postType } = req.body;
+  const image = req.file ? req.file.filename : null; // Mengambil nama file yang di-upload
+  const postTypes = Array.isArray(postType) ? postType.join(',') : postType;
+
+  db.query('INSERT INTO posts (title, image, content, post_type) VALUES (?, ?, ?, ?, ?)', 
+    [title, image, content, postTypes], (err, result) => {
+      if (err) throw err;
+      res.redirect('/posts');
+  });
+}
+
+app.get('/edit-post/:id', (req, res) => {
+  const { id } = req.params;
+
+  db.query('SELECT * FROM posts WHERE id = ?', [id], (err, result) => {
+    if (err) throw err;
+    if (result.length > 0) {
+      const post = result[0];
+
+      // Tentukan apakah setiap jenis pos tercentang
+      post.isArticle = post.post_type.includes('Article');
+      post.isNews = post.post_type.includes('News');
+      post.isTutorial = post.post_type.includes('Tutorial');
+
+      res.render('edit-post', { post });
+    } else {
+      res.send('Post not found');
+    }
+  });
+});
+
+app.post('/edit-post/:id', upload.single('image'), (req, res) => {
+  const { title, content, postType } = req.body;
+  const postTypes = Array.isArray(postType) ? postType.join(',') : postType || '';
+
+  // Cek jika ada gambar baru yang di-upload
+  const image = req.file ? req.file.filename : null;
+
+  // Update post di database
+  db.query('UPDATE posts SET title = ?, image = ?, content = ?, post_type = ? WHERE id = ?', 
+    [title, image, content, postTypes, req.params.id], (err, result) => {
+      if (err) {
+          console.error(err);
+          return res.status(500).send('Error updating post');
+      }
+      res.redirect('/posts');
+  });
+});
+
+app.delete('/posts/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(`Deleting post with id: ${id}`);  // Logging untuk cek apakah route ini terpanggil
+  db.query('DELETE FROM posts WHERE id = ?', [id], (err, result) => {
+    if (err) throw err;
+    console.log('Post deleted successfully');  // Logging untuk cek apakah query berhasil
+    res.redirect('/posts');
+  });
+});
+
+// Mendapatkan semua posts
+function getAllPosts(req, res) {
+  db.query('SELECT * FROM posts', (err, results) => {
+    if (err) throw err;
+    res.render('posts', { posts: results });
+  });
+}
+
+// Mendapatkan post berdasarkan ID
+function getPostById(req, res) {
+  const { id } = req.params;
+
+  db.query('SELECT * FROM posts WHERE id = ?', [id], (err, result) => {
+    if (err) throw err;
+    res.render('post-detail', { post: result[0]});
+  });
+}
 
 app.get('/', isAuthenticated, (req, res) => {
   res.render('index', { username: req.session.username });
@@ -186,91 +221,6 @@ function contact(req, res) {
 function testimonials(req, res) {
   res.render("testimonials")
 };
-
-app.delete('/posts/:id', (req, res) => {
-  const { id } = req.params;
-  console.log(`Deleting post with id: ${id}`);  // Logging untuk cek apakah route ini terpanggil
-  db.query('DELETE FROM posts WHERE id = ?', [id], (err, result) => {
-    if (err) throw err;
-    console.log('Post deleted successfully');  // Logging untuk cek apakah query berhasil
-    res.redirect('/posts');
-  });
-});
-
-
-// function deleteProject(req, res) {
-//   const id = req.params.id
-  
-//   projects.splice(id, 1);
-//   res.redirect("/project");
-// };
-
-// function editProject(req, res) {
-//   const id = req.params.id
-  
-//   res.render("edit-project", {projects: projects[id] });
-// };
-
-// function editProjects(req, res) {
-//   const id = req.params.id
-//   const {imageUrl, projectName, startDate, endDate, description} = req.body;
-  
-//   projects[id] = {
-//     imageUrl : "/assets/img/profile.jpg",
-//     projectName,
-//     startDate,
-//     endDate,
-//     description,
-//   };
-
-//   res.redirect("/project")
-// };
-
-// function project(req, res) {
-//   res.render("project", {projects})
-// };
-
-// function addProjectView (req, res) {
-//   res.render("add-project")
-// };
-
-// function addProject(req, res) {
-//   const {imageUrl, projectName, startDate, endDate, description} = req.body
-
-//   projects.push({
-//     imageUrl : "/assets/img/brandlogo.webp",
-//     projectName,
-//     startDate,
-//     endDate,
-//     description,
-//     // technologies,
-//   });
-
-//   res.redirect("project");
-// };
-
-// function projectDetails(req, res) {
-//   const id = req.params.id
-//   const {imageUrl, projectName, startDate, endDate, description} = req.body;
-
-//   projects[id] = {
-//     imageUrl : "/assets/img/profile.jpg",
-//     projectName,
-//     startDate,
-//     endDate,
-//     description,
-//   };
-
-//   res.render("project-detail", {projects: projects[id] });
-// };
-
-// function projectDetail(req, res) {
-//   const id = req.params.id
-//   const {imageUrl, projectName, startDate, endDate, description} = req.body;
-
-//   res.render("project-detail", {projects: projects[id] });
-// }
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

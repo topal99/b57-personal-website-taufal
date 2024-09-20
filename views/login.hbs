@@ -35,17 +35,19 @@
   </div>
     
 <!-- Form Section -->
-<section class="form-section">
-    <form action="/login" method="POST">
-        <label for="username">Username:</label>
-        <input class="mb-4" type="username" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input class="mb-4" type="password" id="password" name="password" required>
-        <br>
-        <button class="btn-primary" type="submit">Login</button>
-        <br>
-        <br>
-        <p>Create your account <a href="/register">here</a></p>
+<section class="form-section container">
+    <form action="/login" method="POST" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button class="btn btn-dark w-100" type="submit">Login</button>
+        <br><br>
+        <p class="text-center">Create your account <a href="/register">here</a></p>
     </form>
 </section>
 

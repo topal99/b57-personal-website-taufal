@@ -25,6 +25,9 @@
         <li class="nav-item"><a href="/contact" class="nav-link text-white custom-hover">Contact Form</a></li>
         <li class="nav-item"><a href="/testimonials" class="nav-link text-white custom-hover">Testimonials</a></li>
       </ul>
+      <form action="/logout" method="GET">
+        <button class="btn-light" type="submit">Logout</button>
+    </form> 
     </div>
   </div>
 </nav>
@@ -45,27 +48,34 @@
     </div>
       <div class="row d-flex">  
         {{#each posts}}
-          <div class="col-md-4 mb-4">
-            <div class="card")">
-              <img src="" class="card-img-top" alt="{{projectName}}">
-              <div class="card-body">
-                <a href="/posts/{{this.id}}" class="card-title">{{this.title}}</a>
-                <h6 class="card-subtitle mb-2 mt-3 text-muted">{{startDate}} - {{endDate}}</h6>
-                <p class="card-text">{{technologies}}</p>
-                <div class="d-flex justify-content-between mt-4">
-                    <form action="/posts/{{this.id}}?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                      <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                    <a class="btn bg-primary text-white" href="/edit-post/{{this.id}}">Edit</a>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="/uploads/{{this.image}}" alt="{{this.title}}" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                    <div class="card-body">
+                        <a href="/posts/{{this.id}}" class="card-title">{{this.title}}</a>
+                        <h6 class="card-subtitle mb-2 mt-3 text-muted">{{this.post_date}}</h6>
+                        <p class="card-text">{{this.post_type}}</p>
+                        <div class="d-flex justify-content-between mt-4">
+                            <form action="/posts/{{this.id}}?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            <a class="btn bg-primary text-white" href="/edit-post/{{this.id}}">Edit</a>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         {{/each}}
       </div>
   </div>
 </section>
-
+<footer class="bg-body-tertiary text-center text-lg-start"></footer>
+  <!-- Copyright -->
+  <div class="text-center p-3 bg-dark text-white">
+    © 2024 Copyright:
+    <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+  </div>
+  <!-- Copyright -->
+</footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -29,7 +29,7 @@
         <li class="nav-item"><a href="testimonials" class="nav-link text-white custom-hover">Testimonials</a></li>
       </ul>
     <form action="/logout" method="GET">
-        <button type="submit">Logout</button>
+        <button class="btn-light" type="submit">Logout</button>
     </form>    
     </div>
   </div>
@@ -73,8 +73,32 @@
   </div>
 </div>
 
+<div class="row d-flex">  
+  {{#each posts}}
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <img src="/uploads/{{this.image}}" alt="{{this.title}}" class="card-img-top" />
+        <div class="card-body">
+          <a href="/posts/{{this.id}}" class="card-title">{{this.title}}</a>
+          <h6 class="card-subtitle mb-2 mt-3 text-muted">{{this.post_date}}</h6>
+          <p class="card-text">Author: {{this.author}}</p>  <!-- Menampilkan nama author -->
+          <p class="card-text">{{this.post_type}}</p>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+<footer class="bg-body-tertiary text-center text-lg-start">
+  <!-- Copyright -->
+  <div class="text-center p-3 bg-dark text-white">
+    © 2024 Copyright:
+    <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+  </div>
+  <!-- Copyright -->
+</footer>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/index.js"></script>
 </body>
-</html
+</html>
