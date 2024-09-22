@@ -23,7 +23,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item"><a href="/" class="nav-link text-white custom-hover">Home</a></li>
-        <li class="nav-item"><a href="/posts" class="nav-link text-white custom-hover">Posts</a></li>
+        
         <li class="nav-item"><a href="/add-post" class="nav-link text-white custom-hover">Add Post</a></li>
         <li class="nav-item"><a href="contact" class="nav-link text-white custom-hover">Contact Form</a></li>
         <li class="nav-item"><a href="testimonials" class="nav-link text-white custom-hover">Testimonials</a></li>
@@ -72,7 +72,46 @@
     </div>
   </div>
 </div>
-
+<div class="mt-5 pt-5 text-center mb-5">
+    <h1>All Posts</h1>
+  </div>
+{{!-- List all posts by author --}}
+<section class="mt-5 container pt-5 shadow-lg">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col text-start">
+        <a href="/add-post" class="btn btn-primary">Add some project</a>
+      </div>
+    </div>
+    {{#if posts.length}} 
+      <div class="row d-flex"> 
+        {{#each posts}}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="/uploads/{{image}}" alt="{{title}}" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                    <div class="card-body">
+                        <a href="/post-detail/{{id}}" class="card-title">{{title}}</a>
+                        <ul class="list-unstyled mt-3 text-muted">
+                          <li><i class="fa fa-user mb-2"></i> Author: {{author}}</li>
+                          <li><i class="fa fa-calendar mb-2"></i> Posted on: {{post_date}}</li>
+                          <li><i class="fa fa-tags"></i> Categories: {{post_type}}</li>
+                        </ul>
+                        <div class="d-flex justify-content-between mt-4">
+                            <form action="/posts/{{id}}?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            <a class="btn bg-primary text-white" href="/edit-post/{{id}}">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+      </div>
+      {{else}}
+      <p>No posts yet!</p>
+      {{/if}}
+  </div>
+</section>
 <footer class="bg-body-tertiary text-center text-lg-start mt-5">
   <!-- Copyright -->
   <div class="text-center p-3 bg-dark text-white">

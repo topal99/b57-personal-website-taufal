@@ -183,7 +183,7 @@ app.delete('/posts/:id', (req, res) => {
   db.query('DELETE FROM posts WHERE id = ?', [id], (err, result) => {
     if (err) throw err;
     console.log('Post deleted successfully');  // Logging untuk cek apakah query berhasil
-    res.redirect('/posts');
+    res.redirect('/');
   });
 });
 
@@ -238,19 +238,39 @@ function getPostById(req, res) {
   });
 }
 
-
 app.get('/', isAuthenticated, (req, res) => {
+  const userId = req.session.userId; // Ambil userId dari session
 
-  res.render('index', { username: req.session.username });
+  const query = `
+    SELECT posts.*, tb_user.username AS author 
+    FROM posts
+    JOIN tb_user ON posts.authorId = tb_user.id
+    WHERE posts.authorId = ?
+  `;
+
+  db.query(query, [userId], (err, results) => {
+    if (err) throw err;
+
+    // Memformat tanggal setiap post
+    results.forEach(post => {
+      post.post_date = new Date(post.post_date).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
+    });
+
+    res.render('index', { posts: results, username: req.session.username });
+  });
 });
 
 app.get('/posts', isAuthenticated, getAllPosts, (req, res) => {
   res.render('posts', { username: req.session.username });
-});;
+});
 
-app.get('/posts/:id', isAuthenticated, getPostById, (req, res) => {
+app.get('/post-detail/:id', isAuthenticated, getPostById, (req, res) => {
   res.render('posts', { username: req.session.username });
-});;;
+});
 
 app.get('/add-post', isAuthenticated, (req, res) => {
   res.render('add-post', { username: req.session.username });
