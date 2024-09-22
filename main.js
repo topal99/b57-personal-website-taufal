@@ -20,6 +20,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// Middleware
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true
+}));
+
 // Set up view engine
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -50,13 +57,6 @@ db.connect((err) => {
   console.log('Connected to database');
 });
 
-// Middleware
-app.use(session({
-  secret: 'secret',
-  resave: false,
-  saveUninitialized: true
-}));
-
 // Middleware untuk autentikasi
 function isAuthenticated(req, res, next) {
   if (req.session.loggedin) {
@@ -74,22 +74,22 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  // Adjust query to search by email instead of username
   db.query('SELECT * FROM tb_user WHERE email = ?', [email], async (err, results) => {
-      if (err) throw err;
+    if (err) throw err;
 
-      if (results.length > 0) {
-          const comparison = await bcrypt.compare(password, results[0].password);
-          if (comparison) {
-              req.session.loggedin = true;
-              req.session.username = results[0].username;  // Store username in session
-              res.redirect('/');
-          } else {
-              res.send('Incorrect Email and/or Password!');
-          }
+    if (results.length > 0) {
+      const comparison = await bcrypt.compare(password, results[0].password);
+      if (comparison) {
+        req.session.loggedin = true;
+        req.session.userId = results[0].id;  // Simpan userId di session
+        req.session.username = results[0].username;
+        res.redirect('/');
       } else {
-          res.send('Incorrect Email and/or Password!');
+        res.send('Incorrect Email and/or Password!');
       }
+    } else {
+      res.send('Incorrect Email and/or Password!');
+    }
   });
 });
 
@@ -122,15 +122,22 @@ app.use('/uploads', express.static('uploads'));
 
 function createPost(req, res) {
   const { title, content, postType } = req.body;
-  const image = req.file ? req.file.filename : null; // Mengambil nama file yang di-upload
+  const image = req.file ? req.file.filename : null;
   const postTypes = Array.isArray(postType) ? postType.join(',') : postType;
 
-  db.query('INSERT INTO posts (title, image, content, post_type) VALUES (?, ?, ?, ?, ?)', 
-    [title, image, content, postTypes], (err, result) => {
+  const authorId = req.session.userId;  // Pastikan ini ada
+
+  if (!authorId) {
+    return res.status(403).send('Unauthorized: No user logged in.');
+  }
+
+  db.query('INSERT INTO posts (title, image, content, post_type, authorId) VALUES (?, ?, ?, ?, ?)', 
+    [title, image, content, postTypes, authorId], (err, result) => {
       if (err) throw err;
       res.redirect('/posts');
   });
 }
+
 
 app.get('/edit-post/:id', (req, res) => {
   const { id } = req.params;
@@ -182,23 +189,58 @@ app.delete('/posts/:id', (req, res) => {
 
 // Mendapatkan semua posts
 function getAllPosts(req, res) {
-  db.query('SELECT * FROM posts', (err, results) => {
+  const userId = req.session.userId; // Ambil userId dari session
+
+  const query = `
+    SELECT posts.*, tb_user.username AS author 
+    FROM posts
+    JOIN tb_user ON posts.authorId = tb_user.id
+    WHERE posts.authorId = ?
+  `;
+
+  db.query(query, [userId], (err, results) => {
     if (err) throw err;
-    res.render('posts', { posts: results });
+
+    // Memformat tanggal setiap post
+    results.forEach(post => {
+      post.post_date = new Date(post.post_date).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
+    });
+
+    res.render('posts', { posts: results, username: req.session.username });
   });
 }
 
 // Mendapatkan post berdasarkan ID
 function getPostById(req, res) {
   const { id } = req.params;
+  
+  // Query untuk mendapatkan detail post sekaligus dengan nama author
+  const query = `
+    SELECT posts.*, tb_user.username AS author FROM posts JOIN tb_user ON posts.authorId = tb_user.id 
+    WHERE posts.id = ?
+  `;
+  db.query(query, [id], (err, result) => {
 
-  db.query('SELECT * FROM posts WHERE id = ?', [id], (err, result) => {
-    if (err) throw err;
-    res.render('post-detail', { post: result[0]});
+    // Memformat tanggal (misalnya dalam format '21 Sep 2024')
+    if (result.length > 0) {
+      result[0].post_date = new Date(result[0].post_date).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
+    }
+
+    res.render('post-detail', { post: result[0], username: req.session.username });
   });
 }
 
+
 app.get('/', isAuthenticated, (req, res) => {
+
   res.render('index', { username: req.session.username });
 });
 

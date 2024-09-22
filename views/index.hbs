@@ -73,23 +73,7 @@
   </div>
 </div>
 
-<div class="row d-flex">  
-  {{#each posts}}
-    <div class="col-md-4 mb-4">
-      <div class="card">
-        <img src="/uploads/{{this.image}}" alt="{{this.title}}" class="card-img-top" />
-        <div class="card-body">
-          <a href="/posts/{{this.id}}" class="card-title">{{this.title}}</a>
-          <h6 class="card-subtitle mb-2 mt-3 text-muted">{{this.post_date}}</h6>
-          <p class="card-text">Author: {{this.author}}</p>  <!-- Menampilkan nama author -->
-          <p class="card-text">{{this.post_type}}</p>
-        </div>
-      </div>
-    </div>
-  {{/each}}
-</div>
-
-<footer class="bg-body-tertiary text-center text-lg-start">
+<footer class="bg-body-tertiary text-center text-lg-start mt-5">
   <!-- Copyright -->
   <div class="text-center p-3 bg-dark text-white">
     © 2024 Copyright:
