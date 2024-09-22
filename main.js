@@ -138,7 +138,6 @@ function createPost(req, res) {
   });
 }
 
-
 app.get('/edit-post/:id', (req, res) => {
   const { id } = req.params;
 
@@ -173,7 +172,7 @@ app.post('/edit-post/:id', upload.single('image'), (req, res) => {
           console.error(err);
           return res.status(500).send('Error updating post');
       }
-      res.redirect('/posts');
+      res.redirect('/');
   });
 });
 
