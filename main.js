@@ -211,7 +211,7 @@ function getAllPosts(req, res) {
 
     res.render('posts', { posts: results, username: req.session.username });
   });
-}
+};
 
 // Mendapatkan post berdasarkan ID
 function getPostById(req, res) {
@@ -235,7 +235,7 @@ function getPostById(req, res) {
 
     res.render('post-detail', { post: result[0], username: req.session.username });
   });
-}
+};
 
 app.get('/', isAuthenticated, (req, res) => {
   const userId = req.session.userId; // Ambil userId dari session
