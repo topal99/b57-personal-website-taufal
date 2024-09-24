@@ -44,11 +44,12 @@ app.get("/testimonials", testimonials);
 // Gunakan middleware upload dalam route
 app.post('/posts', upload.single('image'), createPost);
 
+// Konfigurasi database
 const db = mysql.createConnection({
-  host: process.env.mysql-iowm.railway.internal,
-  user: process.env.root,
-  password: process.env.wMqQfYUXeyDElHTyAxdKmPteKHAoXETU,
-  database: process.env.railway,
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'b57-personal-website'
 });
 
 db.connect((err) => {
