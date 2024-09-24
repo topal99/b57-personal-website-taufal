@@ -46,10 +46,10 @@ app.post('/posts', upload.single('image'), createPost);
 
 // Konfigurasi database
 const db = mysql.createConnection({
-  host: 'localhost',
+  host: 'mysql-iowm.railway.internal',
   user: 'root',
-  password: '',
-  database: 'b57-personal-website'
+  password: 'wMqQfYUXeyDElHTyAxdKmPteKHAoXETU',
+  database: 'railway'
 });
 
 db.connect((err) => {
